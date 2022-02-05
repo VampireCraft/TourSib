@@ -1,0 +1,7 @@
+<resources>
+
+    <!--designs for login and register-->
+    <style name="progress_bar" parent="Widget.AppCompat.ProgressBar.Horizontal">
+        <item name="android:progressDrawable">@drawable/progress_horizontal_custom</item>
+    </style>
+</resources>
