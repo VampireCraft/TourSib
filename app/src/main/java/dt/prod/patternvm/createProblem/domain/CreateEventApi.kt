@@ -1,9 +1,7 @@
-package dt.prod.patternvm.createProblem.network
+package dt.prod.patternvm.createProblem.domain
 
-import dt.prod.patternvm.core.model.Event
 import retrofit2.http.*
 import dt.prod.patternvm.core.model.ResponseWrapper
-import dt.prod.patternvm.createProblem.models.CreateProblemRequest
 import dt.prod.patternvm.createProblem.models.CreateProblemRequestPhoto
 import dt.prod.patternvm.createProblem.models.PhotoResponse
 

@@ -25,13 +25,6 @@ class TagView(
         tvTitle = view.findViewById(R.id.tvTitle)
         clRoot = view.findViewById(R.id.clRoot)
         tvTitle.text = tag
-
-//        ivCancel.setColorFilter(
-//            ContextCompat.getColor(
-//                context,
-//                R.color.secondary
-//            ), android.graphics.PorterDuff.Mode.SRC_IN
-//        )
         clRoot.setOnClickListener {
             Log.d("test", "ivCancel")
             cancelTag.onTagClosed(tag)

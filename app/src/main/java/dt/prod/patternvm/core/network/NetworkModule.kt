@@ -4,7 +4,8 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
-import dt.prod.patternvm.createProblem.network.CreateEventApi
+import dt.prod.patternvm.createProblem.domain.CreateEventApi
+import dt.prod.patternvm.listProblem.domain.EventApi
 import javax.inject.Singleton
 
 @Module
@@ -14,5 +15,11 @@ object NetworkModule {
     @Provides
     fun provideCreateEventApi(): CreateEventApi {
         return NetworkHolder.getCreateEventApi()
+    }
+
+    @Singleton
+    @Provides
+    fun provideEventApi(): EventApi {
+        return NetworkHolder.getEventApi()
     }
 }

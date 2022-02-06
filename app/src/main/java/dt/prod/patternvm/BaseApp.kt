@@ -22,16 +22,5 @@ class BaseApp : Application() {
         TokenRepository.loadTokenFromShared(
             sharedPreferences.getString("accessToken", "") ?: ""
         )
-
-
-//        FirebaseMessaging.getInstance().token
-//            .addOnCompleteListener(OnCompleteListener { task ->
-//                if (!task.isSuccessful) {
-//                    return@OnCompleteListener
-//                }
-//                MainPrefs.firebaseTokenIsSend = false
-//                val token = task.result
-//                MainPrefs.firebaseToken = token
-//            })
     }
 }

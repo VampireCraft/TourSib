@@ -9,17 +9,15 @@ import dt.prod.patternvm.core.domain.ViewPagerNavigator
 import dt.prod.patternvm.core.network.TokenRepository
 import dt.prod.patternvm.createProblem.ui.FragmentCreateProblem
 import dt.prod.patternvm.databinding.ActivityMainBinding
+import dt.prod.patternvm.listProblem.ui.FragmentList
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity(), ViewPagerNavigator {
     private lateinit var binding: ActivityMainBinding
 
     companion object {
-        //const val vpEventsId = 0
-        //const val vpPlansId = 1
         const val vpCreateEventId = 0
-        //const val vpSearchId = 3
-        //const val vpProfileId = 4
+        const val vpProfileId = 1
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -28,17 +26,15 @@ class MainActivity : AppCompatActivity(), ViewPagerNavigator {
         setContentView(binding.root)
         supportActionBar?.hide()
         configureViewPager()
-        if (TokenRepository.accessToken.isEmpty())
-            openAuthorization()
-        else
-            if (TokenRepository.accessToken == "010")
-                openCreateEventScreen()
-            else
-                if (TokenRepository.accessToken == "013")
-                    openEventsScreen()
+        when (TokenRepository.accessToken){
+            "01" -> openCreateEventScreen()
+            "02" -> openEventsScreen()
+            "03" -> openEventsScreen()
+            else -> openAuthorization()
+        }
     }
 
-    private fun openAuthorization() {
+    override fun openAuthorization() {
         val intent = Intent(this, AuthActivity::class.java)
         startActivity(intent)
         finish()
@@ -46,11 +42,8 @@ class MainActivity : AppCompatActivity(), ViewPagerNavigator {
 
     private fun configureViewPager() {
         val adapter = ViewPagerAdapter(this)
-       // adapter.addFrag(FragmentEvents())
-        //adapter.addFrag(FragmentPlans())
         adapter.addFrag(FragmentCreateProblem())
-        //adapter.addFrag(FragmentSearch())
-        //adapter.addFrag(FragmentProfile())
+        adapter.addFrag(FragmentList())
         binding.vpMain.isUserInputEnabled = false
         binding.vpMain.adapter = adapter
         binding.vpMain.adapter?.notifyDataSetChanged()
@@ -72,12 +65,12 @@ class MainActivity : AppCompatActivity(), ViewPagerNavigator {
     }
 
     override fun openCreateEventScreen() {
-        binding.vpMain.currentItem = 0
+        binding.vpMain.currentItem = vpCreateEventId
 
     }
 
     override fun openEventsScreen() {
-        binding.vpMain.currentItem = 1
+        binding.vpMain.currentItem = vpProfileId
 
     }
 }

@@ -5,12 +5,11 @@ import dt.prod.patternvm.createProblem.domain.CreateProblemRepository
 import dt.prod.patternvm.createProblem.models.CreateProblemRequest
 import dt.prod.patternvm.createProblem.models.CreateProblemRequestPhoto
 import dt.prod.patternvm.createProblem.models.PhotoResponse
-import dt.prod.patternvm.createProblem.network.CreateEventApi
+import dt.prod.patternvm.createProblem.domain.CreateEventApi
 import okhttp3.MediaType
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import java.io.File
-
 
 class CreateProblemRepositoryImpl(val createEventApi: CreateEventApi) :
     CreateProblemRepository {

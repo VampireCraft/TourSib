@@ -8,8 +8,8 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.animation.AnimationUtils
 import androidx.annotation.NonNull
-import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 
@@ -25,6 +25,10 @@ import pl.aprilapps.easyphotopicker.EasyImage
 import pl.aprilapps.easyphotopicker.MediaFile
 import pl.aprilapps.easyphotopicker.MediaSource
 import dt.prod.patternvm.R
+import dt.prod.patternvm.autorization.ui.AuthActivity
+import dt.prod.patternvm.core.domain.DialogAction
+import dt.prod.patternvm.core.network.TokenRepository
+import dt.prod.patternvm.core.ui.TwoButtonsDialog
 import dt.prod.patternvm.createProblem.data.CreateProblemNavigatorImpl
 import dt.prod.patternvm.createProblem.models.CreateProblemViewModel
 import dt.prod.patternvm.databinding.FragmentCreateProblemBinding
@@ -54,10 +58,6 @@ class FragmentCreateProblem : BaseFragment() {
             }
     }
 
-    override fun onResume() {
-        super.onResume()
-    }
-
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -74,10 +74,31 @@ class FragmentCreateProblem : BaseFragment() {
         viewModel.navigator =
             CreateProblemNavigatorImpl(parentFragmentManager, binding.clRoot.id)
         configureView()
-        //paintCameraIcon()
     }
 
     private fun configureView() {
+
+        binding.ivExit.setOnClickListener{
+            it.startAnimation(AnimationUtils.loadAnimation(it.context, R.anim.btn_click))
+            TwoButtonsDialog(
+                positiveBtnText = "Выйти",
+                negativeTextBtn = "Остаться",
+                title = "Подтверждение выхода из профиля",
+                action = object : DialogAction {
+                    override fun onPositiveBtnClicked() {
+                        TokenRepository.deleteTokens()
+                        val intent = Intent(requireContext(), AuthActivity::class.java)
+                        requireActivity().startActivity(intent)
+                        requireActivity().finish()
+                    }
+
+                    override fun onNegativeBtnClicked() {
+
+                    }
+
+                }
+            ).show(parentFragmentManager, TwoButtonsDialog::class.simpleName)
+        }
 
         binding.clGallery.setOnClickListener {
             typeCreateEvent = CreateProblemTypeEnum.EVENT_GALLERY
@@ -147,17 +168,6 @@ class FragmentCreateProblem : BaseFragment() {
                 }
             })
     }
-
-
-    private fun paintCameraIcon() {
-        binding.ivCamera.setColorFilter(
-            ContextCompat.getColor(
-                requireContext(),
-                R.color.sunset_orange
-            )
-        )
-    }
-
 
     override fun showLoading() {
         TODO("Not yet implemented")

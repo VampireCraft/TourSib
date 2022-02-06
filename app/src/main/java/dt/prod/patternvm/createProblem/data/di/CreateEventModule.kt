@@ -6,7 +6,7 @@ import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import dt.prod.patternvm.createProblem.data.CreateProblemRepositoryImpl
 import dt.prod.patternvm.createProblem.domain.CreateProblemRepository
-import dt.prod.patternvm.createProblem.network.CreateEventApi
+import dt.prod.patternvm.createProblem.domain.CreateEventApi
 import javax.inject.Singleton
 
 @Module

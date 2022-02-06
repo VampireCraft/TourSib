@@ -53,7 +53,7 @@ class FragmentChooseColor : BaseFragment() {
         savedInstanceState: Bundle?
     ): View {
         binding = FragmentCreateDescriptionBinding.inflate(inflater, container, false)
-        viewModel = ViewModelProvider(requireActivity()).get(CreateProblemViewModel::class.java)
+        viewModel = ViewModelProvider(requireActivity())[CreateProblemViewModel::class.java]
         return binding.root
     }
 
@@ -131,7 +131,7 @@ class FragmentChooseColor : BaseFragment() {
         val tags = bottomSheetDialog.findViewById<Flow>(R.id.tags)
         val clTags = bottomSheetDialog.findViewById<ConstraintLayout>(R.id.clTags)
 
-        val listTag: List<String> = arrayListOf("1","1.1","1.2","2","2.1","3","3.1","3,2","3,3","3.4")
+        val listTag: List<String> = arrayListOf("1","1.1","1.2","2","2.1","3","3.1","3.2","3.3","3.4")
         var i = 1
         for (tag in listTag){
             val tagView = TagView(requireContext(), tag, cancelTag = object : TagClickListener {
@@ -176,6 +176,7 @@ class FragmentChooseColor : BaseFragment() {
                     binding.etName.text = null
                     binding.etDescription.text = null
                     binding.atvTags.text = null
+                    binding.ivBtnBack.callOnClick()
                 } else if (!it.error.isNullOrEmpty()){
                     hideLoading()
                     Toast.makeText(requireActivity(), "Ошибка отправки: "+it.error.toString(), Toast.LENGTH_LONG).show()

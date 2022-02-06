@@ -43,7 +43,7 @@ class FragmentLogIn : BaseFragment() {
 
     private fun isLoginValid(): Boolean {
         val login = binding.etLogin.text.toString()
-        if (login == "010" || login == "013")
+        if (login == "01" || login == "02" || login == "03")
             return true
         return login.isNotEmpty()
     }

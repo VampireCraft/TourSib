@@ -1,6 +1,5 @@
 package dt.prod.patternvm.core.model
 
-
 import com.google.gson.annotations.SerializedName
 import java.io.Serializable
 
