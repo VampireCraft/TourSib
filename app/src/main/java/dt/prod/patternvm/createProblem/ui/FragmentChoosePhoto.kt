@@ -2,16 +2,23 @@ package dt.prod.patternvm.createProblem.ui
 
 import android.graphics.*
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.util.Base64
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.animation.AnimationUtils
+import android.widget.Toast
+import androidx.constraintlayout.helper.widget.Flow
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.lifecycle.ViewModelProvider
+import com.google.android.material.bottomsheet.BottomSheetDialog
 import dt.prod.patternvm.core.ui.BaseFragment
 import dt.prod.patternvm.createProblem.models.CreateProblemViewModel
 import dt.prod.patternvm.R
+import dt.prod.patternvm.core.ui.TagView
 import dt.prod.patternvm.databinding.FragmentCreateDescriptionBinding
 import java.io.ByteArrayOutputStream
 
@@ -74,6 +81,71 @@ class FragmentChooseColor : BaseFragment() {
             Log.e("RequestError", it.error.toString())
             Log.d("Request",it.data?.url.toString())
         })
+        observeOnTextFields()
+    }
+
+    private fun observeOnTextFields() {
+        binding.etName.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+            }
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+            }
+
+            override fun afterTextChanged(s: Editable?) {
+                try {
+                    viewModel.eventCreationRequest.name = s.toString()
+                } catch (e: Exception) {
+                    showError("Неверный формат данных")
+                }
+            }
+
+        })
+
+        binding.etDescription.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+            }
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+            }
+
+            override fun afterTextChanged(s: Editable?) {
+                try {
+                    viewModel.eventCreationRequest.description = s.toString()
+                } catch (e: Exception) {
+                    showError("Неверный формат данных")
+                }
+            }
+        })
+
+
+        binding.atvTags.setOnClickListener{
+            showBottomSheetDialog()
+        }
+    }
+
+    private fun showBottomSheetDialog(){
+        val bottomSheetDialog = BottomSheetDialog(requireContext(),R.style.SheetDialog)
+        bottomSheetDialog.setContentView(R.layout.bottom_dialog_tags)
+
+        val tags = bottomSheetDialog.findViewById<Flow>(R.id.tags)
+        val clTags = bottomSheetDialog.findViewById<ConstraintLayout>(R.id.clTags)
+
+        val listTag: List<String> = arrayListOf("1","1.1","1.2","2","2.1","3","3.1","3,2","3,3","3.4")
+        var i = 1
+        for (tag in listTag){
+            val tagView = TagView(requireContext(), tag, cancelTag = object : TagClickListener {
+                override fun onTagClosed(tagId:String) {
+                    viewModel.eventCreationRequest.tags = tagId
+                    binding.atvTags.text = tag
+                    bottomSheetDialog.dismiss()
+                }
+            })
+            tagView.id = i++
+            clTags?.addView(tagView)
+            tags?.addView(tagView)
+        }
+        bottomSheetDialog.show()
     }
 
     private fun getRandomString(length: Int) : String {
@@ -94,25 +166,37 @@ class FragmentChooseColor : BaseFragment() {
     private fun configureBtnNext() {
         binding.btnNext.setOnClickListener {
             binding.btnNext.startAnimation(AnimationUtils.loadAnimation(requireContext(), R.anim.btn_click))
+            showLoading()
             //create send request
-
+            viewModel.createEvent()
+            viewModel.createEventResponse.observe(viewLifecycleOwner, {
+                if (!it.data.isNullOrEmpty()) {
+                    hideLoading()
+                    Toast.makeText(requireActivity(), "Успешно отправлено", Toast.LENGTH_LONG).show()
+                    binding.etName.text = null
+                    binding.etDescription.text = null
+                    binding.atvTags.text = null
+                } else if (!it.error.isNullOrEmpty()){
+                    hideLoading()
+                    Toast.makeText(requireActivity(), "Ошибка отправки: "+it.error.toString(), Toast.LENGTH_LONG).show()
+                }
+            })
         }
     }
 
     private fun configureBackBtn() {
         binding.ivBtnBack.setOnClickListener {
+            hideLoading()
             parentFragmentManager.popBackStack()
         }
     }
 
     override fun showLoading() {
-//        binding.llPickedColor.apply {
-//            startAnimation(AnimationUtils.loadAnimation(this.context, R.anim.loading))
-//        }
+        binding.clLoading.visibility = View.VISIBLE
     }
 
     override fun hideLoading() {
-        //binding.llPickedColor.clearAnimation()
+        binding.clLoading.visibility = View.GONE
     }
 
     override fun showError(error: String) {

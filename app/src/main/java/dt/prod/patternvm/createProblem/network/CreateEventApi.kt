@@ -11,7 +11,12 @@ interface CreateEventApi {
 
     @POST("/rzd/Api.php")
     suspend fun createEvent(
-        @Body body: CreateProblemRequest
+        @Query("apicall") apicall: String,
+        @Query("room_num") tag:String,
+        @Query("definition") description: String,
+        @Query("adress_num") typeUsers:String,
+        @Query("image_problem") image:String,
+        @Query("title") name:String
     ): ResponseWrapper<String>
 
     @POST("/rzd/Test.php?")

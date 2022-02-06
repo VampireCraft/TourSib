@@ -17,7 +17,14 @@ class CreateProblemRepositoryImpl(val createEventApi: CreateEventApi) :
 
     override suspend fun createEvent(createEventRequest: CreateProblemRequest): Event<String> {
         return try {
-            val result = createEventApi.createEvent(body = createEventRequest)
+            val result = createEventApi.createEvent(
+                apicall = "postproblem",
+                tag = createEventRequest.tags,
+                description = createEventRequest.description,
+                typeUsers = "101",
+                image = createEventRequest.photo,
+                name = createEventRequest.name
+            )
             when (result.statusId) {
                 200 -> {
                     Event.success(result.data)

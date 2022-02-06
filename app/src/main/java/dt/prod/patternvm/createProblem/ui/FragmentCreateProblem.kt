@@ -74,7 +74,7 @@ class FragmentCreateProblem : BaseFragment() {
         viewModel.navigator =
             CreateProblemNavigatorImpl(parentFragmentManager, binding.clRoot.id)
         configureView()
-        paintCameraIcon()
+        //paintCameraIcon()
     }
 
     private fun configureView() {
