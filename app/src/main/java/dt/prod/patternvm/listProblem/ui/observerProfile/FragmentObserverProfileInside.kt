@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.View.GONE
+import android.view.View.VISIBLE
 import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.fragment.app.Fragment
@@ -34,7 +35,6 @@ class FragmentObserverProfileInside : Fragment() {
     lateinit var event: ListItemModel
     private lateinit var binding: FragmentInsideListProblemBinding
     private lateinit var plansViewModel: PlansViewModel
-
     private var eventDate: Long = 0
     private var eventTime: Long = 0
     private var eventCalendar: Calendar = Calendar.getInstance()
@@ -108,21 +108,81 @@ class FragmentObserverProfileInside : Fragment() {
         binding.tvTitle.text = event.name
         binding.tvDescription.text = event.description
         binding.tvNumber.text = event.tags
-        binding.tvTimeCreate.text = event.timeCreate
-        if (event.timeRemove != "0000-00-00"){
-            val strTime = event.timeRemove.split(" ").toTypedArray()
-            binding.tvDate2.text = strTime[0]
-            try {
-            binding.tvTime.text = strTime[1]
-            } catch (e: Exception){}
-            colorTime()
+        binding.tvTimeCreate.text = "Время создания: " + event.timeCreate
+        binding.tvTimeAccept.text = "Время принятия: " + event.timeAccept
+        binding.tvTimeRemove.text = "Конечный срок: " + event.timeRemove
+        binding.tvTimeOver.text = "Время окончания: " + event.timeOver
+        binding.tvTypeUser.text = when(event.adress){
+            "101" -> "Горничные"
+            "102" -> "Хоз участок"
+            else -> "Хто ты?"
         }
+
+        val calendar: Calendar = Calendar.getInstance(TimeZone.getTimeZone("UTC+3"))
+
+        if (event.timeOver != "0000-00-00 00:00:00" && event.timeOver.isNotEmpty()){
+            binding.tvAlert2.text = "Завершено"
+            binding.tvAlert2.background = requireActivity().getDrawable(R.drawable.decoration_rounded_yellow_filled_tag)
+            binding.tvTimeAccept.visibility = VISIBLE
+            binding.tvTimeRemove.visibility = VISIBLE
+            binding.tvTimeOver.visibility = VISIBLE
+        } else
+            if (event.timeRemove != "0000-00-00 00:00:00" && event.timeRemove.isNotEmpty())
+                if (dateInMillis(event.timeRemove) < calendar.timeInMillis) {
+                    binding.tvAlert2.text = "Просрочено"
+                    binding.tvAlert2.background =
+                        requireActivity().getDrawable(R.drawable.decoration_rounded_red_filled)
+                    binding.tvTimeAccept.visibility = VISIBLE
+                    binding.tvTimeRemove.visibility = VISIBLE
+                } else {
+                    if (event.timeAccept != "0000-00-00 00:00:00" && event.timeAccept.isNotEmpty()) {
+                        binding.tvAlert2.text = "Выполняется"
+                        binding.tvAlert2.background =
+                            requireActivity().getDrawable(R.drawable.decoration_rounded_blue_filled)
+                        binding.tvTimeAccept.visibility = VISIBLE
+                        binding.tvTimeRemove.visibility = VISIBLE
+                    } else {
+                        binding.tvAlert2.text = "Не принято"
+                        binding.tvAlert2.background =
+                            requireActivity().getDrawable(R.drawable.decoration_rounded_orange_filled)
+                    }
+                } else {
+                if (event.timeAccept != "0000-00-00 00:00:00" && event.timeAccept.isNotEmpty()) {
+                    binding.tvAlert2.text = "Выполняется"
+                    binding.tvAlert2.background =
+                        requireActivity().getDrawable(R.drawable.decoration_rounded_blue_filled)
+                    binding.tvTimeAccept.visibility = VISIBLE
+                    binding.tvTimeRemove.visibility = VISIBLE
+                } else {
+                    binding.tvAlert2.text = "Не принято"
+                    binding.tvAlert2.background =
+                        requireActivity().getDrawable(R.drawable.decoration_rounded_orange_filled)
+                }
+            }
+
+        colorTime()
     }
 
+    private fun dateInMillis(date: String): Long {
+        val calendar: Calendar = Calendar.getInstance()
+        val strAllTime = date.split(" ").toTypedArray()
+        val strDate = strAllTime[0].split("-").toTypedArray()
+        val strTime = strAllTime[1].split(":").toTypedArray()
+        calendar.set(
+            strDate[0].toInt(),
+            strDate[1].toInt(),
+            strDate[2].toInt(),
+            strTime[0].toInt(),
+            strTime[1].toInt(),
+            strTime[2].toInt()
+        )
+        return calendar.timeInMillis
+    }
 
     private fun colorTime(){
-        binding.tvDate2.setTextColor(resources.getColor(R.color.bright_turquoise))
-        binding.tvTime.setTextColor(resources.getColor(R.color.bright_turquoise))
+        binding.tvDate2.visibility = GONE
+        binding.tvTime.visibility = GONE
+        binding.tvDateTitle.visibility = GONE
     }
 
     private fun getTimeFromEvent(seconds: Long?): String {
@@ -148,14 +208,6 @@ class FragmentObserverProfileInside : Fragment() {
 
     private fun configureSaveBtn(){
         binding.btnSave.visibility = GONE
-//        binding.btnSave.setOnClickListener{
-//            if (binding.tvDate2.text.toString() != "гггг.мм.дд") {
-//                plansViewModel.listItemModel = event
-//                plansViewModel.listItemModel.timeRemove =
-//                    binding.tvDate2.text.toString() + " " + binding.tvTime.text
-//                plansViewModel.editProblem()
-//            }
-//        }
     }
 
     private fun configureBackBtn() {

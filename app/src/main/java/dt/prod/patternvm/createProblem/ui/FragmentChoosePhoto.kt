@@ -159,13 +159,13 @@ class FragmentChooseColor : BaseFragment() {
         val tags = bottomSheetDialog.findViewById<Flow>(R.id.tags)
         val clTags = bottomSheetDialog.findViewById<ConstraintLayout>(R.id.clTags)
 
-        val listTag: List<String> = arrayListOf("Хоз управление","Горничные")
+        val listTag: List<String> = arrayListOf("Хоз участок","Горничные")
         var i = 1
         for (tag in listTag){
             val tagView = TagView(requireContext(), tag, cancelTag = object : TagClickListener {
                 override fun onTagClosed(tagId:String) {
                     viewModel.eventCreationRequest.typeUser = when (tagId){
-                        "Хоз управление" -> "102"
+                        "Хоз участок" -> "102"
                         "Горничные" -> "101"
                         else -> "228"
                     }

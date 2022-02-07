@@ -80,7 +80,21 @@
                 tools:text="number" />
 
             <TextView
-                android:id="@+id/tvTimeCreate"
+                android:id="@+id/tvAlert2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:background="@drawable/decoration_rounded_orange_filled"
+                android:padding="8dp"
+                android:textColor="@color/white"
+                android:textSize="16sp"
+                app:layout_constraintBottom_toBottomOf="@+id/tvNumber"
+                app:layout_constraintStart_toEndOf="@+id/tvNumber"
+                app:layout_constraintTop_toTopOf="@+id/tvNumber"
+                tools:text="status" />
+
+            <TextView
+                android:id="@+id/tvTypeUser"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="26dp"
@@ -88,7 +102,54 @@
                 android:textColor="@color/black"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/tvNumber"
+                tools:text="Тип пользователя" />
+
+            <TextView
+                android:id="@+id/tvTimeCreate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="26dp"
+                android:layout_marginTop="24dp"
+                android:textColor="@color/black"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tvTypeUser"
                 tools:text="Время создания: " />
+
+            <TextView
+                android:id="@+id/tvTimeAccept"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="26dp"
+                android:layout_marginTop="24dp"
+                android:textColor="@color/black"
+                android:visibility="gone"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tvTimeCreate"
+                tools:text="Время принятия: " />
+
+            <TextView
+                android:id="@+id/tvTimeRemove"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="26dp"
+                android:layout_marginTop="24dp"
+                android:textColor="@color/black"
+                android:visibility="gone"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tvTimeAccept"
+                tools:text="Конечный срок: " />
+
+            <TextView
+                android:id="@+id/tvTimeOver"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="26dp"
+                android:layout_marginTop="24dp"
+                android:textColor="@color/black"
+                android:visibility="gone"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tvTimeRemove"
+                tools:text="Время окончания: " />
 
             <ImageView
                 android:id="@+id/ivBackground"
@@ -99,7 +160,7 @@
                 android:src="@color/main"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/tvTimeCreate" />
+                app:layout_constraintTop_toBottomOf="@id/tvTimeOver" />
 
             <TextView
                 android:id="@+id/tvDateTitle"
@@ -107,7 +168,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="26dp"
                 android:layout_marginTop="16dp"
-                android:text="До какого времени проблема должна быть решена"
+                android:text="До какого времени проблема будет решена"
                 android:textColor="@color/black"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/ivBackground" />
@@ -139,6 +200,7 @@
                 android:layout_marginStart="22dp"
                 android:layout_marginTop="4dp"
                 android:layout_marginEnd="24dp"
+                android:layout_marginBottom="16dp"
                 android:background="@drawable/decoration_filled_white"
                 android:drawableStart="@drawable/ic_watch"
                 android:drawablePadding="12dp"
@@ -148,6 +210,7 @@
                 android:textColor="@color/text_additional"
                 android:textColorHint="@color/bright_turquoise"
                 android:textCursorDrawable="@null"
+                app:layout_constraintBottom_toTopOf="@+id/btnSave"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/tvDate2" />
@@ -157,7 +220,6 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="22dp"
-                android:layout_marginTop="16dp"
                 android:layout_marginEnd="24dp"
                 android:layout_marginBottom="32dp"
                 android:background="@drawable/login_button_bk"
@@ -165,8 +227,7 @@
                 android:textSize="16sp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/tvTime" />
+                app:layout_constraintStart_toStartOf="parent" />
 
 
         </androidx.constraintlayout.widget.ConstraintLayout>

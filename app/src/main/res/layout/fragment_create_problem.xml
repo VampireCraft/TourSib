@@ -18,7 +18,7 @@
         android:layout_marginTop="32dp"
         android:layout_marginEnd="32dp"
         android:gravity="center"
-        android:text="Выбери откуда взять\nизображение для заявки"
+        android:text="Выберите откуда взять\nизображение для заявки"
         android:textAlignment="center"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

@@ -17,9 +17,15 @@ class ListItemModel(
         @SerializedName("datetime_query")
         var timeCreate: String,
         @SerializedName("date_remove")
-        var timeRemove: String
+        var timeRemove: String,
+        @SerializedName("date_accept")
+        var timeAccept: String,
+        @SerializedName("date_over")
+        var timeOver: String
     ) : Serializable {
     constructor() : this(
+        "",
+        "",
         "",
         "",
         "",

@@ -9,6 +9,20 @@
     android:background="@drawable/decoration_filled_white">
 
     <TextView
+        android:id="@+id/tvAlert"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="16dp"
+        android:background="@drawable/decoration_rounded_orange_filled"
+        android:padding="8dp"
+        android:textColor="@color/white"
+        android:textSize="16sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/tvTime"
+        tools:text="status" />
+
+    <TextView
         android:id="@+id/tvNumber2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -17,7 +31,7 @@
         android:padding="8dp"
         android:textColor="@color/white"
         android:textSize="16sp"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toBottomOf="@+id/tvTime"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         tools:text="number" />
@@ -61,6 +75,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/tvTime"
-        tools:text="time" />
+        tools:text="user" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

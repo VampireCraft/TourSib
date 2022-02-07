@@ -17,7 +17,10 @@ interface EventApi {
         @Query("adress_num") typeUsers:String,
         @Query("title") name:String,
         @Query("data_remove") timeRemove: String,
-        @Query("image_problem") image:String
+        @Query("image_problem") image:String,
+        @Query("date_accept") timeAccept:String,
+        @Query("date_over") timeOver:String
+
     ): ResponseWrapper<String>
 
     @GET("/rzd/Api.php")

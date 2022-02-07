@@ -71,7 +71,7 @@ class FragmentAdminProfile : Fragment() {
             binding.rvEvents.layoutManager =
                 LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
             binding.rvEvents.adapter =
-                PlansEventsAdapter(parentFragmentManager, events, isMyEvent = 0)
+                PlansEventsAdapter(requireActivity(),parentFragmentManager, events, isMyEvent = 0)
         } else {
             binding.tvEmptyEvents.visibility = View.VISIBLE
             binding.rvEvents.visibility = View.GONE

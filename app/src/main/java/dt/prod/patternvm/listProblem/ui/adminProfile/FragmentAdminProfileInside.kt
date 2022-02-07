@@ -1,10 +1,13 @@
 package dt.prod.patternvm.listProblem.ui.adminProfile
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.animation.AnimationUtils
 import android.widget.ImageView
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
@@ -17,6 +20,7 @@ import dt.prod.patternvm.listProblem.models.PlansViewModel
 import java.text.SimpleDateFormat
 import java.util.*
 import dt.prod.patternvm.R
+import dt.prod.patternvm.core.model.Status
 import java.lang.Exception
 
 class FragmentAdminProfileInside : Fragment() {
@@ -97,6 +101,7 @@ class FragmentAdminProfileInside : Fragment() {
         binding.tvTime.text =
             "${calendar.get(Calendar.HOUR_OF_DAY)}:${calendar.get(Calendar.MINUTE) + 1}"
        colorTime()
+        Log.e("time milis", eventCalendar.timeInMillis.toString())
     }
 
     private fun getEventFromArguments() {
@@ -107,8 +112,47 @@ class FragmentAdminProfileInside : Fragment() {
         binding.tvTitle.text = event.name
         binding.tvDescription.text = event.description
         binding.tvNumber.text = event.tags
-        binding.tvTimeCreate.text = event.timeCreate
-        if (event.timeRemove != "0000-00-00"){
+        binding.tvTimeCreate.text = "Время создания: " + event.timeCreate
+        binding.tvTypeUser.text = when(event.adress){
+            "101" -> "Горничные"
+            "102" -> "Хоз участок"
+            else -> "Хто ты?"
+        }
+
+        val calendar: Calendar = Calendar.getInstance(TimeZone.getTimeZone("UTC+3"))
+
+        if (event.timeOver != "0000-00-00 00:00:00" && event.timeOver.isNotEmpty()){
+            binding.tvAlert2.text = "Завершено"
+            binding.tvAlert2.background = requireActivity().getDrawable(R.drawable.decoration_rounded_yellow_filled_tag)
+        } else
+            if (event.timeRemove != "0000-00-00 00:00:00" && event.timeRemove.isNotEmpty())
+                if (dateInMillis(event.timeRemove) < calendar.timeInMillis) {
+                    binding.tvAlert2.text = "Просрочено"
+                    binding.tvAlert2.background =
+                        requireActivity().getDrawable(R.drawable.decoration_rounded_red_filled)
+                } else {
+                    if (event.timeAccept != "0000-00-00 00:00:00" && event.timeAccept.isNotEmpty()) {
+                        binding.tvAlert2.text = "Выполняется"
+                        binding.tvAlert2.background =
+                            requireActivity().getDrawable(R.drawable.decoration_rounded_blue_filled)
+                    } else {
+                        binding.tvAlert2.text = "Не принято"
+                        binding.tvAlert2.background =
+                            requireActivity().getDrawable(R.drawable.decoration_rounded_orange_filled)
+                    }
+                } else {
+                if (event.timeAccept != "0000-00-00 00:00:00" && event.timeAccept.isNotEmpty()) {
+                    binding.tvAlert2.text = "Выполняется"
+                    binding.tvAlert2.background =
+                        requireActivity().getDrawable(R.drawable.decoration_rounded_blue_filled)
+                } else {
+                    binding.tvAlert2.text = "Не принято"
+                    binding.tvAlert2.background =
+                        requireActivity().getDrawable(R.drawable.decoration_rounded_orange_filled)
+                }
+            }
+        
+        if (event.timeRemove != "0000-00-00 00:00:00"){
             val strTime = event.timeRemove.split(" ").toTypedArray()
             binding.tvDate2.text = strTime[0]
             try {
@@ -118,6 +162,21 @@ class FragmentAdminProfileInside : Fragment() {
         }
     }
 
+    private fun dateInMillis(date: String): Long {
+        val calendar: Calendar = Calendar.getInstance()
+        val strAllTime = date.split(" ").toTypedArray()
+        val strDate = strAllTime[0].split("-").toTypedArray()
+        val strTime = strAllTime[1].split(":").toTypedArray()
+        calendar.set(
+            strDate[0].toInt(),
+            strDate[1].toInt(),
+            strDate[2].toInt(),
+            strTime[0].toInt(),
+            strTime[1].toInt(),
+            strTime[2].toInt()
+        )
+        return calendar.timeInMillis
+    }
 
     private fun colorTime(){
         binding.tvDate2.setTextColor(resources.getColor(R.color.bright_turquoise))
@@ -145,13 +204,90 @@ class FragmentAdminProfileInside : Fragment() {
             .into(imageView)
     }
 
-    private fun configureSaveBtn(){
-        binding.btnSave.setOnClickListener{
-            if (binding.tvDate2.text.toString() != "гггг.мм.дд") {
+    private fun configureSaveBtn() {
+        if (event.timeRemove == "0000-00-00 00:00:00") {
+            binding.btnSave.text = "Принять к исполнению"
+            binding.btnSave.setOnClickListener {
+                binding.btnSave.startAnimation(
+                    AnimationUtils.loadAnimation(
+                        requireContext(),
+                        R.anim.btn_click
+                    )
+                )
+                if (binding.tvDate2.text.toString() != "гггг.мм.дд" && binding.tvTime.text.toString() != "00:00") {
+                    plansViewModel.listItemModel = event
+                    plansViewModel.listItemModel.timeRemove =
+                        binding.tvDate2.text.toString() + " " + binding.tvTime.text
+                    plansViewModel.listItemModel.timeAccept =
+                        SimpleDateFormat("yyyy-mm-dd hh:mm:ss").format(
+                            Calendar.getInstance(
+                                TimeZone.getTimeZone("UTC+3")
+                            ).time
+                        )
+                    plansViewModel.editProblem()
+                    plansViewModel.acceptedEvents.observe(viewLifecycleOwner, {
+                        when (it.status) {
+                            Status.LOADING -> {
+                                Log.d("myEvents", "LOADING")
+                            }
+
+                            Status.SUCCESS -> {
+                                Log.d("myEvents", "SUCCESS" + it.data)
+                                Toast.makeText(
+                                    requireActivity(),
+                                    "Исполнение начато",
+                                    Toast.LENGTH_LONG
+                                ).show()
+                                plansViewModel.getListProblem()
+                            }
+                            Status.ERROR -> {
+                                Log.d("myEvents", "ERROR" + it.error)
+                            }
+                        }
+                    })
+                } else {
+                    Toast.makeText(requireActivity(), "Укажите дату и время", Toast.LENGTH_LONG)
+                        .show()
+                }
+            }
+        } else {
+            binding.btnSave.text = "Завершить"
+            binding.btnSave.setOnClickListener {
+                binding.btnSave.startAnimation(
+                    AnimationUtils.loadAnimation(
+                        requireContext(),
+                        R.anim.btn_click
+                    )
+                )
                 plansViewModel.listItemModel = event
-                plansViewModel.listItemModel.timeRemove =
-                    binding.tvDate2.text.toString() + " " + binding.tvTime.text
+                plansViewModel.listItemModel.timeOver =
+                    SimpleDateFormat("yyyy-mm-dd hh:mm:ss").format(
+                        Calendar.getInstance(
+                            TimeZone.getTimeZone("UTC+3")
+                        ).time
+                    )
+                plansViewModel.listItemModel.adress = "50"
                 plansViewModel.editProblem()
+                plansViewModel.acceptedEvents.observe(viewLifecycleOwner, {
+                    when (it.status) {
+                        Status.LOADING -> {
+                            Log.d("myEvents", "LOADING")
+                        }
+
+                        Status.SUCCESS -> {
+                            Log.d("myEvents", "SUCCESS" + it.data)
+                            Toast.makeText(
+                                requireActivity(),
+                                "Успешно завершено",
+                                Toast.LENGTH_LONG
+                            ).show()
+                            plansViewModel.getListProblem()
+                        }
+                        Status.ERROR -> {
+                            Log.d("myEvents", "ERROR" + it.error)
+                        }
+                    }
+                })
             }
         }
     }
