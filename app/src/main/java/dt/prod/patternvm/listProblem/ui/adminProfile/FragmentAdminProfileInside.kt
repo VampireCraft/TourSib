@@ -169,7 +169,7 @@ class FragmentAdminProfileInside : Fragment() {
         val strTime = strAllTime[1].split(":").toTypedArray()
         calendar.set(
             strDate[0].toInt(),
-            strDate[1].toInt(),
+            strDate[1].toInt()-1,
             strDate[2].toInt(),
             strTime[0].toInt(),
             strTime[1].toInt(),
@@ -219,32 +219,10 @@ class FragmentAdminProfileInside : Fragment() {
                     plansViewModel.listItemModel.timeRemove =
                         binding.tvDate2.text.toString() + " " + binding.tvTime.text
                     plansViewModel.listItemModel.timeAccept =
-                        SimpleDateFormat("yyyy-mm-dd hh:mm:ss").format(
-                            Calendar.getInstance(
-                                TimeZone.getTimeZone("UTC+3")
-                            ).time
+                        SimpleDateFormat("yyyy-MM-dd hh:mm:ss").format(
+                            Calendar.getInstance().time
                         )
                     plansViewModel.editProblem()
-                    plansViewModel.acceptedEvents.observe(viewLifecycleOwner, {
-                        when (it.status) {
-                            Status.LOADING -> {
-                                Log.d("myEvents", "LOADING")
-                            }
-
-                            Status.SUCCESS -> {
-                                Log.d("myEvents", "SUCCESS" + it.data)
-                                Toast.makeText(
-                                    requireActivity(),
-                                    "Исполнение начато",
-                                    Toast.LENGTH_LONG
-                                ).show()
-                                plansViewModel.getListProblem()
-                            }
-                            Status.ERROR -> {
-                                Log.d("myEvents", "ERROR" + it.error)
-                            }
-                        }
-                    })
                 } else {
                     Toast.makeText(requireActivity(), "Укажите дату и время", Toast.LENGTH_LONG)
                         .show()
@@ -261,35 +239,34 @@ class FragmentAdminProfileInside : Fragment() {
                 )
                 plansViewModel.listItemModel = event
                 plansViewModel.listItemModel.timeOver =
-                    SimpleDateFormat("yyyy-mm-dd hh:mm:ss").format(
-                        Calendar.getInstance(
-                            TimeZone.getTimeZone("UTC+3")
-                        ).time
+                    SimpleDateFormat("yyyy-MM-dd hh:mm:ss").format(
+                        Calendar.getInstance().time
                     )
                 plansViewModel.listItemModel.adress = "50"
                 plansViewModel.editProblem()
-                plansViewModel.acceptedEvents.observe(viewLifecycleOwner, {
-                    when (it.status) {
-                        Status.LOADING -> {
-                            Log.d("myEvents", "LOADING")
-                        }
 
-                        Status.SUCCESS -> {
-                            Log.d("myEvents", "SUCCESS" + it.data)
-                            Toast.makeText(
-                                requireActivity(),
-                                "Успешно завершено",
-                                Toast.LENGTH_LONG
-                            ).show()
-                            plansViewModel.getListProblem()
-                        }
-                        Status.ERROR -> {
-                            Log.d("myEvents", "ERROR" + it.error)
-                        }
-                    }
-                })
             }
         }
+        plansViewModel.acceptedEvents.observe(viewLifecycleOwner, {
+            when (it.status) {
+                Status.LOADING -> {
+                    Log.d("myEvents", "LOADING")
+                }
+
+                Status.SUCCESS -> {
+                    Log.d("myEvents", "SUCCESS" + it.data)
+                    Toast.makeText(
+                        requireActivity(),
+                        "Успешно завершено",
+                        Toast.LENGTH_LONG
+                    ).show()
+                    plansViewModel.getListProblem()
+                }
+                Status.ERROR -> {
+                    Log.d("myEvents", "ERROR" + it.error)
+                }
+            }
+        })
     }
 
     private fun configureBackBtn() {

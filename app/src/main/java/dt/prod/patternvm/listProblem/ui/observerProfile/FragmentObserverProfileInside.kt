@@ -1,6 +1,7 @@
 package dt.prod.patternvm.listProblem.ui.observerProfile
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.View.GONE
@@ -20,6 +21,7 @@ import java.text.SimpleDateFormat
 import java.util.*
 import dt.prod.patternvm.R
 import java.lang.Exception
+import java.time.ZoneId
 
 class FragmentObserverProfileInside : Fragment() {
     companion object {
@@ -118,7 +120,8 @@ class FragmentObserverProfileInside : Fragment() {
             else -> "Хто ты?"
         }
 
-        val calendar: Calendar = Calendar.getInstance(TimeZone.getTimeZone("UTC+3"))
+        val calendar: Calendar = Calendar.getInstance()
+        //Log.e("time in millis current", calendar.timeInMillis.toString())
 
         if (event.timeOver != "0000-00-00 00:00:00" && event.timeOver.isNotEmpty()){
             binding.tvAlert2.text = "Завершено"
@@ -168,14 +171,15 @@ class FragmentObserverProfileInside : Fragment() {
         val strAllTime = date.split(" ").toTypedArray()
         val strDate = strAllTime[0].split("-").toTypedArray()
         val strTime = strAllTime[1].split(":").toTypedArray()
-        calendar.set(
-            strDate[0].toInt(),
-            strDate[1].toInt(),
-            strDate[2].toInt(),
-            strTime[0].toInt(),
-            strTime[1].toInt(),
-            strTime[2].toInt()
-        )
+        calendar.set(Calendar.YEAR,strDate[0].toInt())
+        calendar.set(Calendar.MONTH,strDate[1].toInt()-1)
+        calendar.set(Calendar.DAY_OF_MONTH,strDate[2].toInt())
+        calendar.set(Calendar.HOUR_OF_DAY,strTime[0].toInt())
+        calendar.set(Calendar.MINUTE,strTime[1].toInt())
+        calendar.set(Calendar.SECOND,strTime[2].toInt())
+
+        //Log.e("date in millis remove", SimpleDateFormat("yyyy-MM-dd hh:mm:ss").format(calendar.time))
+        //Log.e("time in millis remove", calendar.timeInMillis.toString())
         return calendar.timeInMillis
     }
 

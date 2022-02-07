@@ -1,7 +1,6 @@
 package dt.prod.patternvm.listProblem.ui
 
 import android.app.Activity
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -84,7 +83,7 @@ class PlansEventsAdapter(
         val strTime = strAllTime[1].split(":").toTypedArray()
         calendar.set(
             strDate[0].toInt(),
-            strDate[1].toInt(),
+            strDate[1].toInt()-1,
             strDate[2].toInt(),
             strTime[0].toInt(),
             strTime[1].toInt(),

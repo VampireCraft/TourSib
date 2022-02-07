@@ -1,9 +1,6 @@
 package dt.prod.patternvm.listProblem.domain
 
-import dt.prod.patternvm.core.model.Event
 import dt.prod.patternvm.core.model.ResponseWrapper
-import dt.prod.patternvm.core.network.TokenRepository
-import dt.prod.patternvm.listProblem.models.Items
 import dt.prod.patternvm.listProblem.models.ListItemModel
 import retrofit2.http.*
 
@@ -17,9 +14,9 @@ interface EventApi {
         @Query("adress_num") typeUsers:String,
         @Query("title") name:String,
         @Query("data_remove") timeRemove: String,
-        @Query("image_problem") image:String,
         @Query("date_accept") timeAccept:String,
-        @Query("date_over") timeOver:String
+        @Query("date_over") timeOver:String,
+        @Query("image_problem") image:String
 
     ): ResponseWrapper<String>
 
