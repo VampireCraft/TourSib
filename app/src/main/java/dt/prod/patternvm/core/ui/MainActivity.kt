@@ -3,6 +3,7 @@ package dt.prod.patternvm.core.ui
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.View.GONE
 import dagger.hilt.android.AndroidEntryPoint
 import dt.prod.patternvm.autorization.ui.AuthActivity
 import dt.prod.patternvm.core.domain.ViewPagerNavigator
@@ -31,7 +32,7 @@ class MainActivity : AppCompatActivity(), ViewPagerNavigator {
         when (TokenRepository.accessToken){
             "01" -> openCreateEventScreen()
             "02" -> openCreateEventScreen()
-            "03" -> openCreateEventScreen()
+            "03" -> observerProfile()
             else -> openAuthorization()
         }
     }
@@ -40,6 +41,11 @@ class MainActivity : AppCompatActivity(), ViewPagerNavigator {
         val intent = Intent(this, AuthActivity::class.java)
         startActivity(intent)
         finish()
+    }
+
+    private fun observerProfile(){
+        binding.bnvMain.visibility = GONE
+        openEventsScreen()
     }
 
     private fun configureViewPager() {
