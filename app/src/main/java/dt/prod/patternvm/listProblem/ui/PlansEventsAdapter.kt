@@ -30,6 +30,11 @@ class PlansEventsAdapter(
         holder.tvName.text = events[position].name
         holder.tvNumber2.text = events[position].tags
         holder.tvTime.text = events[position].timeCreate
+        holder.tvUser.text = when(events[position].adress){
+            "101" -> "Горничные"
+            "102" -> "Хоз управление"
+            else -> "Хто ты?"
+        }
 
         setOnEventClick(holder.clRoot, isMyEvent, events[position])
     }
@@ -70,6 +75,7 @@ class PlansEventsAdapter(
         val tvNumber2: TextView = binding.tvNumber2
         val tvName: TextView = binding.tvName
         val tvTime: TextView = binding.tvTime
+        val tvUser: TextView = binding.tvUser
         val clRoot: ConstraintLayout = binding.clRoot
     }
 }

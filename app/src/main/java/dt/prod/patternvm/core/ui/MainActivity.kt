@@ -10,6 +10,7 @@ import dt.prod.patternvm.core.network.TokenRepository
 import dt.prod.patternvm.createProblem.ui.FragmentCreateProblem
 import dt.prod.patternvm.databinding.ActivityMainBinding
 import dt.prod.patternvm.listProblem.ui.FragmentList
+import dt.prod.patternvm.R
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity(), ViewPagerNavigator {
@@ -26,10 +27,11 @@ class MainActivity : AppCompatActivity(), ViewPagerNavigator {
         setContentView(binding.root)
         supportActionBar?.hide()
         configureViewPager()
+        configureBottomNavigation()
         when (TokenRepository.accessToken){
             "01" -> openCreateEventScreen()
-            "02" -> openEventsScreen()
-            "03" -> openEventsScreen()
+            "02" -> openCreateEventScreen()
+            "03" -> openCreateEventScreen()
             else -> openAuthorization()
         }
     }
@@ -49,6 +51,16 @@ class MainActivity : AppCompatActivity(), ViewPagerNavigator {
         binding.vpMain.adapter?.notifyDataSetChanged()
     }
 
+    private fun configureBottomNavigation() {
+        binding.bnvMain.setOnNavigationItemSelectedListener { menuItem ->
+            when (menuItem.itemId) {
+                R.id.event -> binding.vpMain.currentItem = vpCreateEventId
+                R.id.plans -> binding.vpMain.currentItem = vpProfileId
+            }
+            true
+        }
+    }
+
     override fun onBackPressed() {
         val countFrag = supportFragmentManager.backStackEntryCount
         val countChild = 0
@@ -66,11 +78,11 @@ class MainActivity : AppCompatActivity(), ViewPagerNavigator {
 
     override fun openCreateEventScreen() {
         binding.vpMain.currentItem = vpCreateEventId
-
+        binding.bnvMain.selectedItemId = R.id.event
     }
 
     override fun openEventsScreen() {
         binding.vpMain.currentItem = vpProfileId
-
+        binding.bnvMain.selectedItemId = R.id.plans
     }
 }

@@ -1,6 +1,7 @@
 package dt.prod.patternvm.listProblem.data
 
 import dt.prod.patternvm.core.model.Event
+import dt.prod.patternvm.core.network.TokenRepository
 import dt.prod.patternvm.listProblem.domain.EventApi
 import dt.prod.patternvm.listProblem.domain.PlansRepository
 import dt.prod.patternvm.listProblem.models.ListItemModel
@@ -16,7 +17,8 @@ class PlansRepositoryImpl(val eventApi: EventApi) : PlansRepository {
                 description = listItemModel.description,
                 typeUsers = listItemModel.adress,
                 name = listItemModel.name,
-                timeRemove = listItemModel.timeRemove
+                timeRemove = listItemModel.timeRemove,
+                image = listItemModel.photo
             )
             when (result.statusId) {
                 200 -> {
@@ -31,13 +33,19 @@ class PlansRepositoryImpl(val eventApi: EventApi) : PlansRepository {
 
     override suspend fun getListProblem(): Event<List<ListItemModel>> {
         return try {
+            val users = when (TokenRepository.accessToken){
+                "01" -> "101"
+                "02" -> "102"
+                "03" -> "0"
+                else -> "228"
+            }
             val result = eventApi.getListProblem(
                 apicall = "getproblem",
-                adress_num = 101
+                adress_num = users
             )
             when (result.statusId) {
                 200 -> {
-                    Event.success(result.data?.date)
+                    Event.success(result.data)
                 }
                 else -> Event.error(result?.error ?: "Ошибка запроса")
             }

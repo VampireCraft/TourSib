@@ -122,6 +122,10 @@ class FragmentChooseColor : BaseFragment() {
         binding.atvTags.setOnClickListener{
             showBottomSheetDialog()
         }
+
+        binding.atvTags2.setOnClickListener{
+            showBottomSheetDialog2()
+        }
     }
 
     private fun showBottomSheetDialog(){
@@ -131,13 +135,41 @@ class FragmentChooseColor : BaseFragment() {
         val tags = bottomSheetDialog.findViewById<Flow>(R.id.tags)
         val clTags = bottomSheetDialog.findViewById<ConstraintLayout>(R.id.clTags)
 
-        val listTag: List<String> = arrayListOf("1","1.1","1.2","2","2.1","3","3.1","3.2","3.3","3.4")
+        val listTag: List<String> = arrayListOf("Номер 1","Номер 1.1","Номер 1.2","Номер 2","Номер 2.1","Номер 3","Номер 3.1","Номер 3.2","Номер 3.3","Номер 3.4")
         var i = 1
         for (tag in listTag){
             val tagView = TagView(requireContext(), tag, cancelTag = object : TagClickListener {
                 override fun onTagClosed(tagId:String) {
                     viewModel.eventCreationRequest.tags = tagId
                     binding.atvTags.text = tag
+                    bottomSheetDialog.dismiss()
+                }
+            })
+            tagView.id = i++
+            clTags?.addView(tagView)
+            tags?.addView(tagView)
+        }
+        bottomSheetDialog.show()
+    }
+
+    private fun showBottomSheetDialog2(){
+        val bottomSheetDialog = BottomSheetDialog(requireContext(),R.style.SheetDialog)
+        bottomSheetDialog.setContentView(R.layout.bottom_dialog_tags)
+
+        val tags = bottomSheetDialog.findViewById<Flow>(R.id.tags)
+        val clTags = bottomSheetDialog.findViewById<ConstraintLayout>(R.id.clTags)
+
+        val listTag: List<String> = arrayListOf("Хоз управление","Горничные")
+        var i = 1
+        for (tag in listTag){
+            val tagView = TagView(requireContext(), tag, cancelTag = object : TagClickListener {
+                override fun onTagClosed(tagId:String) {
+                    viewModel.eventCreationRequest.typeUser = when (tagId){
+                        "Хоз управление" -> "102"
+                        "Горничные" -> "101"
+                        else -> "228"
+                    }
+                    binding.atvTags2.text = tag
                     bottomSheetDialog.dismiss()
                 }
             })
@@ -156,7 +188,6 @@ class FragmentChooseColor : BaseFragment() {
     }
 
     private fun prepareFilePart(imageUri: String): String {
-
         val baos = ByteArrayOutputStream()
         BitmapFactory.decodeFile(imageUri).compress(Bitmap.CompressFormat.JPEG, 100, baos)
         return Base64.encodeToString(baos.toByteArray(), Base64.DEFAULT)
@@ -166,23 +197,39 @@ class FragmentChooseColor : BaseFragment() {
     private fun configureBtnNext() {
         binding.btnNext.setOnClickListener {
             binding.btnNext.startAnimation(AnimationUtils.loadAnimation(requireContext(), R.anim.btn_click))
-            showLoading()
-            //create send request
-            viewModel.createEvent()
-            viewModel.createEventResponse.observe(viewLifecycleOwner, {
-                if (!it.data.isNullOrEmpty()) {
-                    hideLoading()
-                    Toast.makeText(requireActivity(), "Успешно отправлено", Toast.LENGTH_LONG).show()
-                    binding.etName.text = null
-                    binding.etDescription.text = null
-                    binding.atvTags.text = null
-                    binding.ivBtnBack.callOnClick()
-                } else if (!it.error.isNullOrEmpty()){
-                    hideLoading()
-                    Toast.makeText(requireActivity(), "Ошибка отправки: "+it.error.toString(), Toast.LENGTH_LONG).show()
-                }
-            })
+            if (checkTextFields()) {
+                showLoading()
+                //create send request
+                viewModel.createEvent()
+                viewModel.createEventResponse.observe(viewLifecycleOwner, {
+                    if (!it.data.isNullOrEmpty()) {
+                        hideLoading()
+                        Toast.makeText(requireActivity(), "Успешно отправлено", Toast.LENGTH_LONG).show()
+                        binding.etName.text = null
+                        binding.etDescription.text = null
+                        binding.atvTags.text = null
+                        binding.ivBtnBack.callOnClick()
+                    } else if (!it.error.isNullOrEmpty()) {
+                        hideLoading()
+                        Toast.makeText(
+                            requireActivity(),
+                            "Ошибка отправки: " + it.error.toString(),
+                            Toast.LENGTH_LONG
+                        ).show()
+                    }
+                })
+            } else {
+                Toast.makeText(requireActivity(), "Не заполнены обязательные поля", Toast.LENGTH_LONG).show()
+            }
         }
+    }
+
+    private fun checkTextFields(): Boolean{
+        if(binding.etName.text.toString().isNotEmpty())
+            if (binding.atvTags.text.toString().isNotEmpty())
+                if (binding.atvTags2.text.toString().isNotEmpty())
+                    return true
+        return false
     }
 
     private fun configureBackBtn() {

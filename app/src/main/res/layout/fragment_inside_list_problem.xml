@@ -123,7 +123,7 @@
                 android:drawableStart="@drawable/ic_calendar"
                 android:drawablePadding="12dp"
                 android:gravity="center_vertical"
-                android:hint="дд.мм.гггг"
+                android:hint="гггг.мм.дд"
                 android:padding="12dp"
                 android:textColor="@color/text_additional"
                 android:textColorHint="@color/bright_turquoise"

@@ -16,13 +16,14 @@ interface EventApi {
         @Query("definition") description: String,
         @Query("adress_num") typeUsers:String,
         @Query("title") name:String,
-        @Query("data_remove") timeRemove: String
+        @Query("data_remove") timeRemove: String,
+        @Query("image_problem") image:String
     ): ResponseWrapper<String>
 
     @GET("/rzd/Api.php")
     suspend fun getListProblem(
         @Query("apicall") apicall: String,
-        @Query("adress_num") adress_num: Int
-    ): ResponseWrapper<Items>
+        @Query("adress_num") adress_num: String
+    ): ResponseWrapper<List<ListItemModel>>
 
 }

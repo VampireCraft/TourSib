@@ -10,8 +10,10 @@ class CreateProblemRequest(
     var tags: String,
     @SerializedName("photo_event")
     var photo: String,
+    var typeUser: String
 ) {
     constructor() : this(
+        "",
         "",
         "",
         "",

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <group>
+        <item
+            android:id="@+id/event"
+            android:icon="@drawable/ic_add_square"
+            android:title="Создание запроса" />
+        <item
+            android:id="@+id/plans"
+            android:icon="@drawable/ic_calendar"
+            android:title="Список запросов" />
+    </group>
+</menu>

@@ -16,6 +16,8 @@ import dt.prod.patternvm.listProblem.models.ListItemModel
 import dt.prod.patternvm.listProblem.models.PlansViewModel
 import java.text.SimpleDateFormat
 import java.util.*
+import dt.prod.patternvm.R
+import java.lang.Exception
 
 class FragmentAdminProfileInside : Fragment() {
     companion object {
@@ -50,6 +52,7 @@ class FragmentAdminProfileInside : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         getEventFromArguments()
         configureBackBtn()
+        configureSaveBtn()
         configureBackgroundImage()
         fillEventInfoFields()
         observeOnTextFields()
@@ -83,9 +86,8 @@ class FragmentAdminProfileInside : Fragment() {
         eventCalendar.set(Calendar.MONTH, calendar.get(Calendar.MONTH))
         eventCalendar.set(Calendar.YEAR, calendar.get(Calendar.YEAR))
         binding.tvDate2.text =
-            "${calendar.get(Calendar.DATE)}.${calendar.get(Calendar.MONTH) + 1}.${
-                calendar.get(Calendar.YEAR)
-            }"
+            "${calendar.get(Calendar.YEAR)}.${calendar.get(Calendar.MONTH) + 1}.${calendar.get(Calendar.DATE)}"
+        colorTime()
     }
 
     private fun setTimeFromCalendar(calendar: Calendar) {
@@ -94,6 +96,7 @@ class FragmentAdminProfileInside : Fragment() {
         eventCalendar.set(Calendar.MINUTE, calendar.get(Calendar.MINUTE))
         binding.tvTime.text =
             "${calendar.get(Calendar.HOUR_OF_DAY)}:${calendar.get(Calendar.MINUTE) + 1}"
+       colorTime()
     }
 
     private fun getEventFromArguments() {
@@ -105,6 +108,20 @@ class FragmentAdminProfileInside : Fragment() {
         binding.tvDescription.text = event.description
         binding.tvNumber.text = event.tags
         binding.tvTimeCreate.text = event.timeCreate
+        if (event.timeRemove != "0000-00-00"){
+            val strTime = event.timeRemove.split(" ").toTypedArray()
+            binding.tvDate2.text = strTime[0]
+            try {
+            binding.tvTime.text = strTime[1]
+            } catch (e: Exception){}
+            colorTime()
+        }
+    }
+
+
+    private fun colorTime(){
+        binding.tvDate2.setTextColor(resources.getColor(R.color.bright_turquoise))
+        binding.tvTime.setTextColor(resources.getColor(R.color.bright_turquoise))
     }
 
     private fun getTimeFromEvent(seconds: Long?): String {
@@ -117,7 +134,7 @@ class FragmentAdminProfileInside : Fragment() {
     private fun getDateFromEvent(seconds: Long?): String {
         val date = Date()
         date.time = seconds?.times(1000) ?: 0
-        val dateFormat = SimpleDateFormat("dd.MM.yyyy", Locale.getDefault())
+        val dateFormat = SimpleDateFormat("yyyy.MM.dd", Locale.getDefault())
         return dateFormat.format(date)
     }
 
@@ -126,6 +143,17 @@ class FragmentAdminProfileInside : Fragment() {
             .with(requireContext())
             .load(photoUrl)
             .into(imageView)
+    }
+
+    private fun configureSaveBtn(){
+        binding.btnSave.setOnClickListener{
+            if (binding.tvDate2.text.toString() != "гггг.мм.дд") {
+                plansViewModel.listItemModel = event
+                plansViewModel.listItemModel.timeRemove =
+                    binding.tvDate2.text.toString() + " " + binding.tvTime.text
+                plansViewModel.editProblem()
+            }
+        }
     }
 
     private fun configureBackBtn() {

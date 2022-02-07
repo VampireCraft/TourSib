@@ -6,10 +6,6 @@ import dt.prod.patternvm.createProblem.models.CreateProblemRequest
 import dt.prod.patternvm.createProblem.models.CreateProblemRequestPhoto
 import dt.prod.patternvm.createProblem.models.PhotoResponse
 import dt.prod.patternvm.createProblem.domain.CreateEventApi
-import okhttp3.MediaType
-import okhttp3.MultipartBody
-import okhttp3.RequestBody
-import java.io.File
 
 class CreateProblemRepositoryImpl(val createEventApi: CreateEventApi) :
     CreateProblemRepository {
@@ -20,7 +16,7 @@ class CreateProblemRepositoryImpl(val createEventApi: CreateEventApi) :
                 apicall = "postproblem",
                 tag = createEventRequest.tags,
                 description = createEventRequest.description,
-                typeUsers = "101",
+                typeUsers = createEventRequest.typeUser,
                 image = createEventRequest.photo,
                 name = createEventRequest.name
             )
@@ -48,14 +44,4 @@ class CreateProblemRepositoryImpl(val createEventApi: CreateEventApi) :
             Event.error(e.message.toString())
         }
     }
-
-      private fun prepareFilePart(imageUri: String): MultipartBody.Part {
-        val file = File(imageUri)
-        val requestFile = RequestBody.create(
-            MediaType.parse("image/*"),
-            file
-        )
-        return MultipartBody.Part.createFormData("photo_event", file.name, requestFile)
-    }
-
 }
