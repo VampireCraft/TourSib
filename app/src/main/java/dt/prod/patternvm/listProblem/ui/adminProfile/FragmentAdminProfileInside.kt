@@ -242,7 +242,11 @@ class FragmentAdminProfileInside : Fragment() {
                     SimpleDateFormat("yyyy-MM-dd hh:mm:ss").format(
                         Calendar.getInstance().time
                     )
-                plansViewModel.listItemModel.adress = "50"
+                plansViewModel.listItemModel.adress = when(plansViewModel.listItemModel.adress){
+                    "101" -> "51"
+                    "102" -> "52"
+                    else -> "50"
+                }
                 plansViewModel.editProblem()
 
             }

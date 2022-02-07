@@ -117,6 +117,8 @@ class FragmentObserverProfileInside : Fragment() {
         binding.tvTypeUser.text = when(event.adress){
             "101" -> "Горничные"
             "102" -> "Хоз участок"
+            "51" -> "Горничные"
+            "52" -> "Хоз участок"
             else -> "Хто ты?"
         }
 
