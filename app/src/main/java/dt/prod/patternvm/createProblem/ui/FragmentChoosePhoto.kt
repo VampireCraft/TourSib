@@ -135,7 +135,7 @@ class FragmentChooseColor : BaseFragment() {
         val tags = bottomSheetDialog.findViewById<Flow>(R.id.tags)
         val clTags = bottomSheetDialog.findViewById<ConstraintLayout>(R.id.clTags)
 
-        val listTag: List<String> = arrayListOf("Номер 1","Номер 1.1","Номер 1.2","Номер 2","Номер 2.1","Номер 3","Номер 3.1","Номер 3.2","Номер 3.3","Номер 3.4")
+        val listTag: List<String> = arrayListOf("1/1 Л","1/2 Л","2/1 Л","2/2 Л","3/1 Л","3/2 Л","4 Л","5/1 СтЗ","5/2 СтЗ","5/3 СтЗ","5/4 СтЗ","5/5 СтЗ", "5/6 СтЗ","6/1 Л","6/2 Л","7 Л","8/1 Л","8/2 Л","9/1 Л","9/2 Л", "10/1 Л","10/2 Л","11 Л","12 Л+","14 АП","15 Л+","16 Л+","17/1 Т","17/2 Т","18 СА","17/3 Т","17/4 Т","17/5 Т","17/6 Т","30 ст СтЗ","32 ст СтЗ","34 ст СтЗ")
         var i = 1
         for (tag in listTag){
             val tagView = TagView(requireContext(), tag, cancelTag = object : TagClickListener {

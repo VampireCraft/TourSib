@@ -37,6 +37,8 @@ class PlansEventsAdapter(
         holder.tvUser.text = when(events[position].adress){
             "101" -> "Горничные"
             "102" -> "Хоз участок"
+            "51" -> "Горничные"
+            "52" -> "Хоз участок"
             else -> "Хто ты?"
         }
 
