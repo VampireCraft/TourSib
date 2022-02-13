@@ -4,11 +4,13 @@ import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
+import android.view.View.VISIBLE
 import android.view.ViewGroup
 import android.view.animation.AnimationUtils
 import android.widget.ImageView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
 import dt.prod.patternvm.core.ui.pickers.DatePickerFragment
@@ -99,7 +101,7 @@ class FragmentAdminProfileInside : Fragment() {
         eventCalendar.set(Calendar.HOUR_OF_DAY, calendar.get(Calendar.HOUR_OF_DAY))
         eventCalendar.set(Calendar.MINUTE, calendar.get(Calendar.MINUTE))
         binding.tvTime.text =
-            "${calendar.get(Calendar.HOUR_OF_DAY)}:${calendar.get(Calendar.MINUTE) + 1}"
+            "${calendar.get(Calendar.HOUR_OF_DAY)}:${calendar.get(Calendar.MINUTE)}"
        colorTime()
         Log.e("time milis", eventCalendar.timeInMillis.toString())
     }
@@ -113,6 +115,9 @@ class FragmentAdminProfileInside : Fragment() {
         binding.tvDescription.text = event.description
         binding.tvNumber.text = event.tags
         binding.tvTimeCreate.text = "Время создания: " + event.timeCreate
+        binding.tvTimeAccept.text = "Время принятия: " + event.timeAccept
+        binding.tvTimeRemove.text = "Конечный срок: " + event.timeRemove
+        binding.tvTimeOver.text = "Время окончания: " + event.timeOver
         binding.tvTypeUser.text = when(event.adress){
             "101" -> "Горничные"
             "102" -> "Хоз участок"
@@ -219,7 +224,7 @@ class FragmentAdminProfileInside : Fragment() {
                     plansViewModel.listItemModel.timeRemove =
                         binding.tvDate2.text.toString() + " " + binding.tvTime.text
                     plansViewModel.listItemModel.timeAccept =
-                        SimpleDateFormat("yyyy-MM-dd hh:mm:ss").format(
+                        SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(
                             Calendar.getInstance().time
                         )
                     plansViewModel.editProblem()
@@ -229,6 +234,10 @@ class FragmentAdminProfileInside : Fragment() {
                 }
             }
         } else {
+            binding.tvTimeRemove.visibility = VISIBLE
+            binding.tvDate2.visibility = View.GONE
+            binding.tvTime.visibility = View.GONE
+            binding.tvDateTitle.visibility = View.GONE
             binding.btnSave.text = "Завершить"
             binding.btnSave.setOnClickListener {
                 binding.btnSave.startAnimation(
@@ -239,7 +248,7 @@ class FragmentAdminProfileInside : Fragment() {
                 )
                 plansViewModel.listItemModel = event
                 plansViewModel.listItemModel.timeOver =
-                    SimpleDateFormat("yyyy-MM-dd hh:mm:ss").format(
+                    SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(
                         Calendar.getInstance().time
                     )
                 plansViewModel.listItemModel.adress = when(plansViewModel.listItemModel.adress){
@@ -259,12 +268,22 @@ class FragmentAdminProfileInside : Fragment() {
 
                 Status.SUCCESS -> {
                     Log.d("myEvents", "SUCCESS" + it.data)
-                    Toast.makeText(
-                        requireActivity(),
-                        "Успешно завершено",
-                        Toast.LENGTH_LONG
-                    ).show()
+                    if (binding.btnSave.text == "Принять к исполнению") {
+                        Toast.makeText(
+                            requireActivity(),
+                            "Успешно принято к исполнению",
+                            Toast.LENGTH_LONG
+                        ).show()
+                    } else {
+                        Toast.makeText(
+                            requireActivity(),
+                            "Успешно завершено",
+                            Toast.LENGTH_LONG
+                        ).show()
+                    }
+                    plansViewModel.acceptedEvents = MutableLiveData()
                     plansViewModel.getListProblem()
+                    binding.ivBtnBack.callOnClick()
                 }
                 Status.ERROR -> {
                     Log.d("myEvents", "ERROR" + it.error)

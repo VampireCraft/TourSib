@@ -3,7 +3,7 @@
     <style name="Theme.PatternViewModel" parent="Theme.AppCompat.NoActionBar">
         <!-- Primary brand color. -->
 
-        <item name="colorPrimaryVariant">#00c853</item>
+        <item name="colorPrimaryVariant">#4c7e84</item>
         <item name="colorOnPrimary">@color/white</item>
         <!-- Secondary brand color. -->
         <item name="colorSecondary">@color/teal_200</item>

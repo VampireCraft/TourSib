@@ -200,7 +200,6 @@
                 android:layout_marginStart="22dp"
                 android:layout_marginTop="4dp"
                 android:layout_marginEnd="24dp"
-                android:layout_marginBottom="16dp"
                 android:background="@drawable/decoration_filled_white"
                 android:drawableStart="@drawable/ic_watch"
                 android:drawablePadding="12dp"
@@ -210,7 +209,6 @@
                 android:textColor="@color/text_additional"
                 android:textColorHint="@color/bright_turquoise"
                 android:textCursorDrawable="@null"
-                app:layout_constraintBottom_toTopOf="@+id/btnSave"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/tvDate2" />
@@ -220,6 +218,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="22dp"
+                android:layout_marginTop="16dp"
                 android:layout_marginEnd="24dp"
                 android:layout_marginBottom="32dp"
                 android:background="@drawable/login_button_bk"
@@ -227,7 +226,8 @@
                 android:textSize="16sp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent" />
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tvTime" />
 
 
         </androidx.constraintlayout.widget.ConstraintLayout>

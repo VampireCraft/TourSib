@@ -12,7 +12,7 @@ class PlansViewModel @ViewModelInject constructor(private val plansRepository: P
     ViewModel() {
 
     var listItemModel = ListItemModel()
-    val acceptedEvents: MutableLiveData<Event<String>> = MutableLiveData()
+    var acceptedEvents: MutableLiveData<Event<String>> = MutableLiveData()
     fun editProblem() {
         acceptedEvents.value = Event.loading()
         viewModelScope.launch {
